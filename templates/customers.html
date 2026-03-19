@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="text-4xl font-bold mb-6 text-blue-400">Customers 👥</h2>
+
+<!-- 🔍 SEARCH + FILTER -->
+<form method="GET" class="flex gap-3 mb-6">
+
+    <input type="text" name="search" placeholder="Search..."
+           value="{{ search }}"
+           class="p-2 rounded bg-gray-800">
+
+    <select name="sentiment" class="p-2 rounded bg-gray-800">
+        <option value="">All</option>
+        <option value="Positive" {% if sentiment=='Positive' %}selected{% endif %}>Positive</option>
+        <option value="Negative" {% if sentiment=='Negative' %}selected{% endif %}>Negative</option>
+    </select>
+
+    <button class="bg-blue-500 px-4 rounded">Apply</button>
+</form>
+
+<!-- TABLE -->
+<div class="glass p-6">
+
+<table class="w-full text-left">
+
+<tr class="border-b border-gray-600 text-blue-400">
+    <th>Name</th>
+    <th>Phone</th>
+    <th>Service</th>
+    <th>Feedback</th>
+    <th>Sentiment</th>
+    <th>Actions</th>
+</tr>
+
+{% for f in feedbacks.items %}
+<tr class="border-b border-gray-700 hover:bg-white/5">
+
+    <td>{{ f.name }}</td>
+    <td>{{ f.phone }}</td>
+    <td>{{ f.service }}</td>
+    <td>{{ f.text }}</td>
+
+    <td>
+        {% if f.sentiment == "Positive" %}
+        <span class="text-green-400">😊 Positive</span>
+        {% else %}
+        <span class="text-red-400">😡 Negative</span>
+        {% endif %}
+    </td>
+
+    <td class="flex gap-2">
+        <a href="/edit/{{ f.id }}" class="text-blue-400">✏️</a>
+        <a href="/delete/{{ f.id }}" class="text-red-400">🗑️</a>
+    </td>
+
+</tr>
+{% endfor %}
+
+</table>
+</div>
+
+<!-- 📄 PAGINATION -->
+<div class="mt-6 flex gap-2">
+
+{% if feedbacks.has_prev %}
+<a href="?page={{ feedbacks.prev_num }}" class="bg-gray-700 px-3 py-1 rounded">Prev</a>
+{% endif %}
+
+<span class="px-3 py-1">Page {{ feedbacks.page }}</span>
+
+{% if feedbacks.has_next %}
+<a href="?page={{ feedbacks.next_num }}" class="bg-gray-700 px-3 py-1 rounded">Next</a>
+{% endif %}
+
+</div>
+
+{% endblock %}
